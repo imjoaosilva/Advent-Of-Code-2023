@@ -7,12 +7,10 @@ function firstPart() {
   const codes = fs.readFileSync(file, "utf8").trim().split("\n");
   const regex = /\d+/g;
 
-  const result = codes.reduce((acc, curr) => {
+  return codes.reduce((acc, curr) => {
     const numbers = curr.match(regex).join("").split("");
     return parseInt(numbers[0] + numbers[numbers.length - 1]) + acc;
   }, 0);
-
-  return result;
 }
 
 console.log(firstPart());
