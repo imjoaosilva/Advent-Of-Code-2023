@@ -14,3 +14,7 @@ function firstPart() {
 }
 
 console.log(firstPart());
+
+function secondPart() { }
+
+console.log(secondPart());
