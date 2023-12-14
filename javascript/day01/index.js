@@ -46,11 +46,7 @@ function secondPart() {
         if (matchedStringNumber)
           return stringNumbers.indexOf(matchedStringNumber) + 1 + 1;
 
-        const numericValue = Number.isInteger(parseInt(character))
-          ? character
-          : undefined;
-
-        return numericValue;
+        return Number.isInteger(parseInt(character)) ? character : undefined;
       })
       .filter((char) => char !== undefined);
 
