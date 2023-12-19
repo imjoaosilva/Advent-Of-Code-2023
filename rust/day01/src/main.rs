@@ -30,21 +30,12 @@ impl Challenge for Part01 {
             .expect("Something went wrong reading the file");
 
         let result = codes.lines().fold(0, |acc, code| {
-            let code_numbers: Vec<i32> = code
-                .split("")
-                .map(|x| x.parse().unwrap_or(-1))
-                .filter(|&num| num != -1)
-                .collect();
+            let mut code_numbers = code.split("").filter_map(|x| x.parse::<i32>().ok());
+            
+            let first: i32 = code_numbers.next().unwrap();
+            let last: i32 = code_numbers.last().unwrap_or(first);
 
-            let number = [code_numbers[0], code_numbers[code_numbers.len() - 1]]
-                .iter()
-                .map(|&num| num.to_string())
-                .collect::<Vec<String>>()
-                .join("")
-                .parse::<i32>()
-                .unwrap_or(-1);
-
-            acc + number
+            acc + format!("{}{}", first, last).parse::<i32>().unwrap()
         });
 
         println!("Result: {}", result);
