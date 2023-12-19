@@ -35,7 +35,7 @@ impl Challenge for Part01 {
             let first: i32 = code_numbers.next().unwrap();
             let last: i32 = code_numbers.last().unwrap_or(first);
 
-            acc + format!("{}{}", first, last).parse::<i32>().unwrap()
+            acc + first*10 + last
         });
 
         println!("Result: {}", result);
