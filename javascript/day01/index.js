@@ -44,7 +44,7 @@ function secondPart() {
         });
 
         if (matchedStringNumber)
-          return stringNumbers.indexOf(matchedStringNumber) + 1 + 1;
+          return stringNumbers.indexOf(matchedStringNumber) + 2;
 
         return Number.isInteger(parseInt(character)) ? character : undefined;
       })
