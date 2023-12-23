@@ -10,6 +10,11 @@ struct Part01 {
     input_path: String,
 }
 
+struct Part02 {
+    initial_path: String,
+    input_path: String,
+}
+
 impl Challenge for Part01 {
     fn new(initial_path: String, input_path: String) -> Self {
         Part01 {
@@ -42,8 +47,33 @@ impl Challenge for Part01 {
     }
 }
 
+impl Challenge for Part02 {
+    fn new(initial_path: String, input_path: String) -> Self {
+        Part02 {
+            initial_path,
+            input_path,
+        }
+    }
+
+    fn run(&self, test: bool) {
+        let path = if test {
+            &self.initial_path
+        } else {
+            &self.input_path
+        };
+
+        let codes = fs
+            ::read_to_string(path)
+            .expect("Something went wrong reading the file");
+    }
+}
+
+
 fn main() {
     let part_01 = Part01::new(String::from("./initial1.txt"), String::from("./input1.txt"));
     part_01.run(true);
     part_01.run(false);
+
+    let part_02 = Part02::new(String::from("./initial2.txt"), String::from("./input2.txt"));
+    part_02.run(true);
 }
