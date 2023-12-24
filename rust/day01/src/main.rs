@@ -1,79 +1,98 @@
 use std::fs;
 
-trait Challenge {
-    fn new(initial_path: String, input_path: String) -> Self;
-    fn run(&self, test: bool) -> ();
+struct Part01<'a> {
+    test_input: &'a str,
+    final_input: &'a str,
 }
 
-struct Part01 {
-    initial_path: String,
-    input_path: String,
+struct Part02<'a> {
+    test_input: &'a str,
+    final_input: &'a str,
 }
 
-struct Part02 {
-    initial_path: String,
-    input_path: String,
+trait Challenge<'a> {
+    fn new(test_input: &'a str, final_input: &'a str) -> Self;
+    fn run(&self, test: bool) -> i32;
 }
 
-impl Challenge for Part01 {
-    fn new(initial_path: String, input_path: String) -> Self {
+impl<'a> Challenge<'a> for Part01<'a> {
+    fn new(test_input: &'a str, final_input: &'a str) -> Self {
         Part01 {
-            initial_path,
-            input_path,
+            final_input,
+            test_input,
         }
     }
 
-    fn run(&self, test: bool) {
-        let path = if test {
-            &self.initial_path
-        } else {
-            &self.input_path
-        };
+    fn run(&self, test: bool) -> i32 {
+        let path = if test { &self.test_input } else { &self.final_input };
 
-        let codes = fs
-            ::read_to_string(path)
-            .expect("Something went wrong reading the file");
+        let codes = fs::read_to_string(path).expect("Error reading the file");
 
-        let result = codes.lines().fold(0, |acc, code| {
-            let mut code_numbers = code.split("").filter_map(|x| x.parse::<i32>().ok());
-            
-            let first: i32 = code_numbers.next().unwrap();
-            let last: i32 = code_numbers.last().unwrap_or(first);
+        let result = codes.lines().fold(0, |ac, code| {
+            let mut numbers = code.split("").filter_map(|c| c.parse::<i32>().ok());
+            let first = numbers.next().unwrap();
+            let second = numbers.last().unwrap_or(first);
 
-            acc + first*10 + last
+            ac + first * 10 + second
         });
 
-        println!("Result: {}", result);
+        result
     }
 }
 
-impl Challenge for Part02 {
-    fn new(initial_path: String, input_path: String) -> Self {
+impl<'a> Challenge<'a> for Part02<'a> {
+    fn new(test_input: &'a str, final_input: &'a str) -> Self {
         Part02 {
-            initial_path,
-            input_path,
+            final_input,
+            test_input,
         }
     }
+    fn run(&self, test: bool) -> i32 {
+        let path = if test { &self.test_input } else { &self.final_input };
 
-    fn run(&self, test: bool) {
-        let path = if test {
-            &self.initial_path
-        } else {
-            &self.input_path
-        };
+        let numbers_str = [
+            "Zero",
+            "One",
+            "Two",
+            "Three",
+            "Four",
+            "Five",
+            "Six",
+            "Seven",
+            "Eight",
+            "Nine",
+        ];
 
-        let codes = fs
-            ::read_to_string(path)
-            .expect("Something went wrong reading the file");
+        let codes = fs::read_to_string(path).expect("Error reading the file");
+
+        let result = codes.lines().fold(0, |ac, code| {
+            let mut new_code = code.to_string();
+
+            numbers_str
+                .iter()
+                .enumerate()
+                .for_each(|(i, n)| {
+                    new_code = new_code.replace(&n.to_lowercase(), &i.to_string());
+                });
+
+            let mut numbers = new_code.split("").filter_map(|x| x.parse::<i32>().ok());
+
+            let first = numbers.next().unwrap();
+            let last = numbers.last().unwrap_or(first);
+
+            println!("{first}{last}");
+
+            ac + first * 10 + last
+        });
+
+        result
     }
 }
 
-
 fn main() {
-    let part_01 = Part01::new(String::from("./initial1.txt"), String::from("./input1.txt"));
-    part_01.run(true);
-    part_01.run(false);
-
-    let part_02 = Part02::new(String::from("./initial2.txt"), String::from("./input2.txt"));
-    part_02.run(true);
+    let part_01 = Part01::new("./test1.txt", "./final1.txt");
+    println!("{}", part_01.run(true));
+    println!("{}", part_01.run(false));
+    let part_02 = Part02::new("./test2.txt", "./final2.txt");
+    println!("{}", part_02.run(true));
 }
